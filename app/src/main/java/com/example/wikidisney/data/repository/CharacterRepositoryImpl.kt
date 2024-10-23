@@ -13,11 +13,11 @@ class CharacterRepositoryImpl @Inject constructor(private val api: DisneyApi) :
         return api.getCharactersList(page)
     }
 
-    //
-//    override suspend fun getCharacterInfo(idCharacter: Int): CharacterResponse {
-//        return api.getCharacterInfo(idCharacter)
-//
-//    }
+    override suspend fun getCharacterInfoAlt(idChar: Int): CharacterResponse {
+        return api.getCharacterInfo(idChar)
+    }
+
+
     override suspend fun getCharacterInfo(idCharacter: Int): Resource<CharacterResponse> {
         val response = try {
             api.getCharacterInfo(idCharacter)

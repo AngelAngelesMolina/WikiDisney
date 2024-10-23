@@ -7,12 +7,12 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class GetCharacterUseCase @Inject constructor(private val repositoryImpl: CharacterRepositoryImpl) {
-    /*suspend operator fun invoke(characterId: Int): Resource<CharacterResponse> {
+     suspend operator fun invoke(characterId: Int): Resource<CharacterResponse> {
         val response = try {
-            repositoryImpl.getCharacterInfo(characterId)
+            repositoryImpl.getCharacterInfoAlt(characterId)
         } catch (e: Exception) {
             return Resource.Error("An unknow error occured")
         }
         return Resource.Success(response)
-    }*/
+    }
 }

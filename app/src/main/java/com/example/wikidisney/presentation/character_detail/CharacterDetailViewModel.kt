@@ -15,8 +15,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 @HiltViewModel
-class CharacterDetailViewModel @Inject constructor(
-    //private val getCharacterUseCase: GetCharacterUseCase
+class CharacterDetailViewModel @Inject constructor(private val getCharacterUseCase: GetCharacterUseCase,
 private val repository: CharacterRepositoryImpl
 
 ) :
@@ -98,7 +97,15 @@ private val repository: CharacterRepositoryImpl
             }
         }
     }*/
-   suspend fun getPokemonInfo(pokemonName: Int): Resource<CharacterResponse> {
+   suspend fun getPokemonInfoAlt(pokemonName: Int): Resource<CharacterResponse> {
+       return try {
+           val response = repository.getCharacterInfoAlt(pokemonName)
+           Resource.Success(response) // Devuelve la data en un Resource.Success si la llamada es exitosa
+       } catch (e: Exception) {
+           Resource.Error("An unknown error occurred") // Maneja cualquier excepción y devuelve un Resource.Error
+       }
+   }
+   suspend fun getCharacterInfo(pokemonName: Int): Resource<CharacterResponse> {
        return repository.getCharacterInfo(pokemonName)
    }
 }

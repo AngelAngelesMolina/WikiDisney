@@ -49,7 +49,7 @@ fun CharacterDetailScreen(
         produceState<Resource<CharacterResponse>>(initialValue = Resource.Loading()) {//take a initial
             // value
             value =
-                viewModel.getPokemonInfo(characterId)// execute suspend function and asign the result
+                viewModel.getPokemonInfoAlt(characterId)// execute suspend function and asign the result
         }.value
     Timber.tag("CharacterDetailStateWrapper").w(characterInfo.toString())
 
