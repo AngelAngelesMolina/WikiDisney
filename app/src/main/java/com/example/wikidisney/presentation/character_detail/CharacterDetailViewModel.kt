@@ -97,15 +97,15 @@ private val repository: CharacterRepositoryImpl
             }
         }
     }*/
-   suspend fun getPokemonInfoAlt(pokemonName: Int): Resource<CharacterResponse> {
+   suspend fun getCharacterInfoAlt(charId: Int): Resource<CharacterResponse> {
        return try {
-           val response = repository.getCharacterInfoAlt(pokemonName)
+           val response = repository.getCharacterInfoAlt(charId)
            Resource.Success(response) // Devuelve la data en un Resource.Success si la llamada es exitosa
        } catch (e: Exception) {
            Resource.Error("An unknown error occurred") // Maneja cualquier excepción y devuelve un Resource.Error
        }
    }
-   suspend fun getCharacterInfo(pokemonName: Int): Resource<CharacterResponse> {
-       return repository.getCharacterInfo(pokemonName)
+   suspend fun getCharacterInfo(charId: Int): Resource<CharacterResponse> {
+       return repository.getCharacterInfo(charId)
    }
 }
