@@ -30,7 +30,7 @@ fun CharacterList(
 
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
-        //Timber.tag("DATA").w(characterList.toString())
+
         val itemCount = if (characterList.size % 2 == 0) {
             characterList.size / 2
         } else {

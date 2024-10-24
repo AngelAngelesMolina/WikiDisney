@@ -3,6 +3,7 @@ package com.example.wikidisney.presentation.character_list
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -51,23 +52,30 @@ class CharacterListViewModel @Inject constructor(private val getCharactersUseCas
                 }
 
                 is Resource.Success -> {
-                    val characterEntries =
-                        result.data!!.data.mapIndexed { index, characterInfoEntry ->
+                    result.data?.let { characters ->
+                        val characterEntries = characters.map { characterEntity ->
                             CharacterListEntry(
-                                characterInfoEntry.name.replaceFirstChar {
-                                    if (it.isLowerCase()) it.titlecase(
-                                        Locale.ROOT
-                                    ) else it.toString()
+                                characterName = characterEntity.name.replaceFirstChar {
+                                    if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
                                 },
-                                characterInfoEntry.imageUrl,
-                                characterInfoEntry._id
+                                imageUrl = characterEntity.imageUrl, // Aquí se usa la URL de la imagen correctamente
+                                id = characterEntity.id
                             )
-
                         }
-                    curPage++
-                    loadError.value = ""
+                        // Solo agregar nuevos personajes que no están en la lista actual
+                        val newCharacters = characterEntries.filter { newEntry ->
+                            !characterList.value.any { it.id == newEntry.id } // Asegúrate de que no esté ya en la lista
+                        }
+                        // Actualiza la lista de personajes solo si hay nuevos
+                        if (newCharacters.isNotEmpty()) {
+                            characterList.value += newCharacters // Solo agrega los nuevos personajes
+                        }
+                        curPage++
+                        loadError.value = ""
+                    } ?: run {
+                        loadError.value = "No se pudieron cargar los personajes"
+                    }
                     isLoading.value = false
-                    characterList.value += characterEntries
                 }
             }
         }
