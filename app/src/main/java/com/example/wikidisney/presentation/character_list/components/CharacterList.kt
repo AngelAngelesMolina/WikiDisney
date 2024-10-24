@@ -54,7 +54,7 @@ fun CharacterList(
         if (loadError.isNotEmpty()) {
             //TODO: here we're gonna use our database info
             /*RetrySection(loadError) {
-                viewModel.loadPokemonPaginated()
+                viewModel.()
             }*/
         }
     }

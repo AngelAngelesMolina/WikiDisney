@@ -18,15 +18,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.wikidisney.common.Resource
+import com.example.wikidisney.data.database.entities.CharacterEntity
 import com.example.wikidisney.data.remote.dto.CharacterInfo
 import java.util.Locale
 
 @Composable
 fun CharacterDetailSection(
-    characterInfo: CharacterInfo,
+    characterInfo: Resource<CharacterEntity>,
+    //characterInfo: CharacterInfo,
     modifier: Modifier = Modifier
 ) {
-
+    val character = characterInfo.data!!
     val scrollState = rememberScrollState()
 
     Column(
@@ -37,34 +40,42 @@ fun CharacterDetailSection(
             .verticalScroll(scrollState)
     ) {
 
-        Text(
-            text = "#${characterInfo._id} ${
-                characterInfo.name.replaceFirstChar {
-                    if (it.isLowerCase()) it.titlecase(
-                        Locale.ROOT
-                    ) else it.toString()
+            Text(
+                text = "#${character.id} ${
+                    character.name.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.ROOT
+                        ) else it.toString()
+                    }
+                }",
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "Agregar a favoritos")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(modifier = Modifier.fillMaxWidth()) {
+                val filteredFilms = character.films?.filter { it.isNotBlank() } ?: emptyList()
+                if (filteredFilms.isNotEmpty()) {
+                    CharacterDataDinamic(title = "Películas", itemsList = filteredFilms)
                 }
-            }",
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            fontSize = 30.sp,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = "Agregar a favoritos")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(modifier = Modifier.fillMaxWidth()) {
-            characterInfo.films.takeIf { it.isNotEmpty() }?.let { filmsList ->
-                CharacterDataDinamic(title = "Películas",itemsList = filmsList)
+
+                // Shows
+                val filteredTvShows = character.tvShows?.filter { it.isNotBlank() } ?: emptyList()
+                if (filteredTvShows.isNotEmpty()) {
+                    CharacterDataDinamic(title = "Shows", itemsList = filteredTvShows)
+                }
+
+                // Videojuegos
+                val filteredVideoGames = character.videoGames?.filter { it.isNotBlank() } ?: emptyList()
+                if (filteredVideoGames.isNotEmpty()) {
+                    CharacterDataDinamic(title = "Videojuegos", itemsList = filteredVideoGames)
+                }
             }
-            characterInfo.tvShows.takeIf { it.isNotEmpty() }?.let { tvShowsList ->
-                CharacterDataDinamic(title = "Shows",itemsList = tvShowsList)
-            }
-            characterInfo.videoGames.takeIf { it.isNotEmpty() }?.let { videoGamesList ->
-                CharacterDataDinamic(title = "Videojuegos",itemsList = videoGamesList)
-            }
-        }
     }
 }

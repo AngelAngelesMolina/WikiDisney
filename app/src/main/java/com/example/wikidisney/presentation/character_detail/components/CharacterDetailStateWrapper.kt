@@ -9,19 +9,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.wikidisney.common.Resource
+import com.example.wikidisney.data.database.entities.CharacterEntity
 import com.example.wikidisney.data.remote.dto.CharacterResponse
 import timber.log.Timber
 
 @Composable
 fun CharacterDetailStateWrapper(
-    characterInfo: Resource<CharacterResponse>,
+    characterInfo: Resource<CharacterEntity>,
     modifier: Modifier = Modifier,
     loadingModifier: Modifier = Modifier
 ) {
     when (characterInfo) {
         is Resource.Success -> {
             CharacterDetailSection(
-                characterInfo = characterInfo.data!!.data,
+                characterInfo = characterInfo,
                 modifier = modifier.offset(y = (-20).dp)
             )
         }

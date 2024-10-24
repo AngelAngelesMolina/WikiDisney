@@ -33,7 +33,7 @@ fun CharacterListScreen(
 //            Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.disney_logo),
-                contentDescription = "Pokemon",
+                contentDescription = "Character",
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)

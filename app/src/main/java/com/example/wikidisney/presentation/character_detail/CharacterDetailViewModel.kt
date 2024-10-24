@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wikidisney.common.Resource
+import com.example.wikidisney.data.database.entities.CharacterEntity
 import com.example.wikidisney.data.remote.dto.CharacterInfo
 import com.example.wikidisney.data.remote.dto.CharacterResponse
 import com.example.wikidisney.data.repository.CharacterRepositoryImpl
@@ -97,6 +98,40 @@ private val repository: CharacterRepositoryImpl
             }
         }
     }*/
+   var characterDetail = mutableStateOf<CharacterEntity?>(null)
+    var loadError = mutableStateOf("")
+    var isLoading = mutableStateOf(false)
+
+    fun getCharacterDetail(characterId: Int) {
+        viewModelScope.launch {
+            isLoading.value = true
+            val result = getCharacterUseCase(characterId)
+            when (result) {
+                is Resource.Success -> {
+                    characterDetail.value = result.data
+                    loadError.value = ""
+                }
+                is Resource.Error -> {
+                    loadError.value = result.message ?: "Unknown error"
+                }
+
+                else -> {}
+            }
+            isLoading.value = false
+        }
+    }
+    suspend fun getCharacterDetailAlt(characterId: Int): Resource<CharacterEntity> {
+        isLoading.value = true
+        return try {
+            // Llama al caso de uso para obtener el detalle del personaje
+            val result = getCharacterUseCase(characterId)
+            isLoading.value = false
+            result // Devuelve el resultado obtenido del use case
+        } catch (e: Exception) {
+            isLoading.value = false
+            Resource.Error("Error al obtener los detalles del personaje") // Manejo de error
+        }
+    }
    suspend fun getCharacterInfoAlt(charId: Int): Resource<CharacterResponse> {
        return try {
            val response = repository.getCharacterInfoAlt(charId)

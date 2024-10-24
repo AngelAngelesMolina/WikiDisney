@@ -30,6 +30,7 @@ import coil.request.ImageRequest
 import com.example.wikidisney.common.Resource
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.example.wikidisney.data.database.entities.CharacterEntity
 import com.example.wikidisney.data.remote.dto.CharacterResponse
 import com.example.wikidisney.presentation.character_detail.components.CharacterDetailStateWrapper
 import com.example.wikidisney.presentation.character_detail.components.CharacterDetailTopSection
@@ -52,7 +53,10 @@ fun CharacterDetailScreen(
                 viewModel.getCharacterInfoAlt(characterId)// execute suspend function and asign the result
         }.value
     Timber.tag("CharacterDetailStateWrapper").w(characterInfo.toString())
-
+    val characterEntity =
+        produceState<Resource<CharacterEntity>>(initialValue = Resource.Loading()) {
+            value = viewModel.getCharacterDetailAlt(characterId) // Cambiar para obtener CharacterEntity
+        }.value
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +71,7 @@ fun CharacterDetailScreen(
                 .align(Alignment.TopCenter)
         )
         CharacterDetailStateWrapper(
-            characterInfo = characterInfo,
+            characterInfo = characterEntity,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
@@ -95,14 +99,14 @@ fun CharacterDetailScreen(
             contentAlignment = Alignment.TopCenter,
             modifier = Modifier.fillMaxSize()
         ) {
-            if (characterInfo is Resource.Success) {
-                characterInfo.data?.data?.let {
+            if (characterEntity is Resource.Success) {
+                characterEntity.data?.let {
                     SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(it.imageUrl)
                             .crossfade(true)
                             .build(),
-                        contentDescription = characterInfo.data.data.name,
+                        contentDescription = characterInfo.data?.data?.name,
                         modifier = Modifier
                             .size(characterImageSize)
                             .offset(y = topPadding)

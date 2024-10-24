@@ -61,4 +61,40 @@ class CharacterRepositoryImpl @Inject constructor(
 
     }
 
+    override suspend fun getCharacterInfoRoom(characterId: Int): Resource<CharacterEntity> {
+        return try {
+            // Intentamos obtener el personaje desde la base de datos local
+            val localCharacter = characterDao.getCharacterById(characterId)
+
+            if (localCharacter != null) {
+                // Si el personaje existe en la base de datos local, devolvemos el dato local
+                // y hacemos una actualización en la base de datos con los nuevos datos de la API
+                val response = api.getCharacterInfo(characterId)
+                val updatedCharacterEntity = response.data.toCharacterEntity()
+
+                // Actualizamos la base de datos si hay nuevos datos
+                characterDao.updateCharacter(updatedCharacterEntity)
+
+                // Retornamos el personaje local inmediatamente
+                Resource.Success(localCharacter)
+            } else {
+                // Si no hay datos locales, realizamos la llamada a la API directamente
+                val response = api.getCharacterInfo(characterId)
+                val characterEntity = response.data.toCharacterEntity()
+
+                // Insertamos el personaje en la base de datos
+                characterDao.insertCharacter(characterEntity)
+                Resource.Success(characterEntity)
+            }
+        } catch (e: Exception) {
+            // En caso de error, intentamos devolver los datos locales si están disponibles
+            val localCharacter = characterDao.getCharacterById(characterId)
+            if (localCharacter != null) {
+                Resource.Success(localCharacter)
+            } else {
+                Resource.Error("Error de red y no hay datos locales disponibles.")
+            }
+        }
+    }
+
 }
