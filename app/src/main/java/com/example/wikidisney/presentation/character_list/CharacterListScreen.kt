@@ -47,6 +47,7 @@ fun CharacterListScreen(
                 viewModel.searchCharacterList(query)
             }
             Spacer(modifier = Modifier.height(16.dp))
+            
             CharacterList(navController = navController)
         }
     }

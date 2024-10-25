@@ -8,6 +8,7 @@ import com.example.wikidisney.data.database.entities.CharacterEntity
 import com.example.wikidisney.data.remote.dto.CharacterInfo
 import com.example.wikidisney.data.remote.dto.CharacterResponse
 import com.example.wikidisney.data.repository.CharacterRepositoryImpl
+import com.example.wikidisney.domain.use_case.add_to_fav_character.ToggleFavCharacterUseCase
 import com.example.wikidisney.domain.use_case.get_character.GetCharacterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,91 +18,39 @@ import timber.log.Timber
 import javax.inject.Inject
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(private val getCharacterUseCase: GetCharacterUseCase,
-private val repository: CharacterRepositoryImpl
-
+private val repository: CharacterRepositoryImpl,
+    private val toggleFavCharacterUseCase: ToggleFavCharacterUseCase
 ) :
     ViewModel() {
-   /* lateinit var currentCharacter: Resource<CharacterResponse>
-
-    fun getCharacterInfo(charId: Int): Resource<CharacterResponse> {
-        viewModelScope.launch {
-            currentCharacter = Resource.Loading() // Estado de carga inicial
-
-            val result = getCharacterUseCase(charId)
-            currentCharacter = result;
-            currentCharacter = when (result) {
-                is Resource.Success -> result
-                is Resource.Error -> result
-                else -> Resource.Error("Unknown error")
-            }
-            Timber.tag("VIEWMODEL").w(currentCharacter.toString())
-            Timber.tag("VIEWMODEL").w(result.toString())
-
-        }
-        Timber.tag("VIEWMODEL").w(currentCharacter.toString())
-        return currentCharacter
-    }*/
-    // Estado de los datos de detalle del personaje
-    /*var characterDetail = mutableStateOf<CharacterResponse?>(null)
+    var characterDetail = mutableStateOf<CharacterEntity?>(null)
+        private set
     var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
 
-    // Iniciar la petición de detalle con el id del personaje
-    fun loadCharacterDetail(charId: Int) {
+    suspend fun getCharacterDetailAlt(characterId: Int): Resource<CharacterEntity> {
+        isLoading.value = true
+        return try {
+            // Llama al caso de uso para obtener el detalle del personaje
+            val result = getCharacterUseCase(characterId)
+            if (result is Resource.Success) {
+                characterDetail.value = result.data
+            }
+            isLoading.value = false
+            result // Devuelve el resultado obtenido del use case
+        } catch (e: Exception) {
+            isLoading.value = false
+            Resource.Error("Error al obtener los detalles del personaje") // Manejo de error
+        }
+    }
+    fun toggleFavorite() {
         viewModelScope.launch {
-            isLoading.value = true
-            val result = getCharacterUseCase(charId)
-            when (result) {
-                is Resource.Error -> {
-                    loadError.value = result.message!!
-                    isLoading.value = false
-                }
-                is Resource.Loading -> {
-                    // Estado de carga si lo necesitas
-                }
-                is Resource.Success -> {
-                    characterDetail.value = result.data
-                    loadError.value = ""
-                    isLoading.value = false
-                }
+            characterDetail.value?.let { character ->
+                toggleFavCharacterUseCase(character)
+                // Cambia el estado de favorito
+                characterDetail.value = character.copy(isFavorite = !character.isFavorite) // Forzar actualización del estado
             }
         }
-    }*/
-   // Estado de los datos de detalle del personaje
-   /*private val _characterDetail = MutableStateFlow<CharacterResponse?>(null)
-    val characterDetail: StateFlow<CharacterResponse?> = _characterDetail
-
-    private val _loadError = MutableStateFlow("")
-    val loadError: StateFlow<String> = _loadError
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
-    // Iniciar la petición de detalle con el id del personaje
-    fun loadCharacterDetail(charId: Int) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            val result = getCharacterUseCase(charId)
-            when (result) {
-                is Resource.Error -> {
-                    _loadError.value = result.message ?: "Unknown error"
-                    _isLoading.value = false
-                }
-                is Resource.Loading -> {
-                    // Estado de carga si lo necesitas
-                }
-                is Resource.Success -> {
-                    _characterDetail.value = result.data
-                    _loadError.value = ""
-                    _isLoading.value = false
-                }
-            }
-        }
-    }*/
-   var characterDetail = mutableStateOf<CharacterEntity?>(null)
-    var loadError = mutableStateOf("")
-    var isLoading = mutableStateOf(false)
-
+    }
     fun getCharacterDetail(characterId: Int) {
         viewModelScope.launch {
             isLoading.value = true
@@ -120,18 +69,7 @@ private val repository: CharacterRepositoryImpl
             isLoading.value = false
         }
     }
-    suspend fun getCharacterDetailAlt(characterId: Int): Resource<CharacterEntity> {
-        isLoading.value = true
-        return try {
-            // Llama al caso de uso para obtener el detalle del personaje
-            val result = getCharacterUseCase(characterId)
-            isLoading.value = false
-            result // Devuelve el resultado obtenido del use case
-        } catch (e: Exception) {
-            isLoading.value = false
-            Resource.Error("Error al obtener los detalles del personaje") // Manejo de error
-        }
-    }
+
    suspend fun getCharacterInfoAlt(charId: Int): Resource<CharacterResponse> {
        return try {
            val response = repository.getCharacterInfoAlt(charId)
@@ -140,6 +78,7 @@ private val repository: CharacterRepositoryImpl
            Resource.Error("An unknown error occurred") // Maneja cualquier excepción y devuelve un Resource.Error
        }
    }
+
    suspend fun getCharacterInfo(charId: Int): Resource<CharacterResponse> {
        return repository.getCharacterInfo(charId)
    }

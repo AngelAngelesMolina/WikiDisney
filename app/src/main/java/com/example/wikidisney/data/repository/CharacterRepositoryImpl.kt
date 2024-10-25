@@ -97,4 +97,12 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateCharacter(character: CharacterEntity) {
+        characterDao.updateCharacter(character)
+    }
+
+   /* override suspend fun getCharacterById(id: Int): CharacterEntity? {
+        return characterDao.getCharacterById(id)
+    }*/
+
 }
