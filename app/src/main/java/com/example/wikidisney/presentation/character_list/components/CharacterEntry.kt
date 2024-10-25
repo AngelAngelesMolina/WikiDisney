@@ -76,11 +76,6 @@ fun CharacterEntry(
                     Modifier // No hacer nada si no es clickable
                 }
             )
-           /* .clickable {
-                navController.navigate(
-                    Screen.CharacterDetailScreen.route+"/${dominantColor.toArgb()}/${entry.id}"
-                )
-            }*/
     ) {
         Column {
             SubcomposeAsyncImage(

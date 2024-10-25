@@ -1,6 +1,5 @@
 package com.example.wikidisney.data.repository
 
-import android.util.Log
 import com.example.wikidisney.common.Resource
 import com.example.wikidisney.data.database.dao.CharacterDao
 import com.example.wikidisney.data.database.entities.CharacterEntity
@@ -16,9 +15,6 @@ class CharacterRepositoryImpl @Inject constructor(
     private val characterDao: CharacterDao
 ) :
     CharacterRepository {
-    override suspend fun getCharacterList(page: Int): CharactersResponse {
-        return api.getCharactersList(page)
-    }
 
     override suspend fun getCharacterListRoom(page: Int): Resource<List<CharacterEntity>> {
         return try {
@@ -46,36 +42,12 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCharacterInfoAlt(idChar: Int): CharacterResponse {
-        return api.getCharacterInfo(idChar)
-    }
-
-
-    override suspend fun getCharacterInfo(idCharacter: Int): Resource<CharacterResponse> {
-        val response = try {
-            api.getCharacterInfo(idCharacter)
-        } catch (e: Exception) {
-            return Resource.Error("An unknow error occured")
-        }
-        return Resource.Success(response)
-
-    }
-
     override suspend fun getCharacterInfoRoom(characterId: Int): Resource<CharacterEntity> {
         return try {
             // Intentamos obtener el personaje desde la base de datos local
             val localCharacter = characterDao.getCharacterById(characterId)
             Resource.Success(localCharacter)
             if (localCharacter != null) {
-                // Si el personaje existe en la base de datos local, devolvemos el dato local
-                // y hacemos una actualización en la base de datos con los nuevos datos de la API
-                //val response = api.getCharacterInfo(characterId)
-                //val updatedCharacterEntity = response.data.toCharacterEntity()
-
-                // Actualizamos la base de datos si hay nuevos datos
-                //characterDao.updateCharacter(updatedCharacterEntity)
-
-                // Retornamos el personaje local inmediatamente
                 Resource.Success(localCharacter)
             } else {
                 // Si no hay datos locales, realizamos la llamada a la API directamente

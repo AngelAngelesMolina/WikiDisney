@@ -18,13 +18,11 @@ import timber.log.Timber
 import javax.inject.Inject
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(private val getCharacterUseCase: GetCharacterUseCase,
-private val repository: CharacterRepositoryImpl,
     private val toggleFavCharacterUseCase: ToggleFavCharacterUseCase
 ) :
     ViewModel() {
     var characterDetail = mutableStateOf<CharacterEntity?>(null)
         private set
-    var loadError = mutableStateOf("")
     var isLoading = mutableStateOf(false)
 
     suspend fun getCharacterDetailAlt(characterId: Int): Resource<CharacterEntity> {
@@ -50,35 +48,4 @@ private val repository: CharacterRepositoryImpl,
             }
         }
     }
-    fun getCharacterDetail(characterId: Int) {
-        viewModelScope.launch {
-            isLoading.value = true
-            val result = getCharacterUseCase(characterId)
-            when (result) {
-                is Resource.Success -> {
-                    characterDetail.value = result.data
-                    loadError.value = ""
-                }
-                is Resource.Error -> {
-                    loadError.value = result.message ?: "Unknown error"
-                }
-
-                else -> {}
-            }
-            isLoading.value = false
-        }
-    }
-
-   suspend fun getCharacterInfoAlt(charId: Int): Resource<CharacterResponse> {
-       return try {
-           val response = repository.getCharacterInfoAlt(charId)
-           Resource.Success(response) // Devuelve la data en un Resource.Success si la llamada es exitosa
-       } catch (e: Exception) {
-           Resource.Error("An unknown error occurred") // Maneja cualquier excepción y devuelve un Resource.Error
-       }
-   }
-
-   suspend fun getCharacterInfo(charId: Int): Resource<CharacterResponse> {
-       return repository.getCharacterInfo(charId)
-   }
 }

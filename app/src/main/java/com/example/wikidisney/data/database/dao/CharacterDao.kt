@@ -8,8 +8,6 @@ import androidx.room.Update
 import com.example.wikidisney.data.database.entities.CharacterEntity
 @Dao
 interface CharacterDao {
-    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharacters(characters: List<CharacterEntity>)*/
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacter(character: CharacterEntity)
     @Query("SELECT * FROM characters WHERE id = :characterId")

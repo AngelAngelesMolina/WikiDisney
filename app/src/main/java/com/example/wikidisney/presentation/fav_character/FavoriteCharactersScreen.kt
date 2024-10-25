@@ -14,7 +14,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.wikidisney.presentation.character_detail.components.CharacterDetailTopSection
 import com.example.wikidisney.presentation.character_list.components.CharacterRow
 
@@ -34,15 +32,7 @@ fun FavoriteCharactersScreen(
     val favoriteCharacterList by remember { viewModel.favoriteCharacters }
     val isLoading by remember { viewModel.isLoading }
     val loadError by remember { viewModel.loadError }
-    /*val favoriteCharacterList by remember { viewModel.favoriteCharacters }
-    val isLoading by remember { viewModel.isLoading }
-    val loadError by remember { viewModel.loadError }
 
-    // Usar LaunchedEffect para recargar los datos
-    val navBackStackEntry = navController.currentBackStackEntryAsState()
-    LaunchedEffect(navBackStackEntry.value) {
-//        viewModel.reloadFavoriteCharacters() // Asegúrate de tener un método para recargar
-    }*/
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
