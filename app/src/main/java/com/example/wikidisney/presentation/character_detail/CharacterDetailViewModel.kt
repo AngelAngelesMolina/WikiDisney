@@ -46,7 +46,6 @@ private val repository: CharacterRepositoryImpl,
         viewModelScope.launch {
             characterDetail.value?.let { character ->
                 toggleFavCharacterUseCase(character)
-                // Cambia el estado de favorito
                 characterDetail.value = character.copy(isFavorite = !character.isFavorite) // Forzar actualización del estado
             }
         }

@@ -46,13 +46,6 @@ fun CharacterDetailScreen(
     characterImageSize: Dp = 200.dp,
     viewModel: CharacterDetailViewModel = hiltViewModel()
 ) {
-   /* val characterInfo =
-        produceState<Resource<CharacterResponse>>(initialValue = Resource.Loading()) {//take a initial
-            // value
-            value =
-                viewModel.getCharacterInfoAlt(characterId)// execute suspend function and asign the result
-        }.value
-    Timber.tag("CharacterDetailStateWrapper").w(characterInfo.toString())*/
     val characterEntity =
         produceState<Resource<CharacterEntity>>(initialValue = Resource.Loading()) {
             value = viewModel.getCharacterDetailAlt(characterId) // Cambiar para obtener CharacterEntity

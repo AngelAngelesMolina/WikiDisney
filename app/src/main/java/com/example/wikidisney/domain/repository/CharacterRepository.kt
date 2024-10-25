@@ -14,5 +14,6 @@ interface CharacterRepository {
     suspend fun getCharacterInfo(idCharacter: Int): Resource<CharacterResponse>
     suspend fun getCharacterInfoRoom(characterId: Int): Resource<CharacterEntity>
     suspend fun updateCharacter(character: CharacterEntity)
+    suspend fun getFavoriteCharacters(): List<CharacterEntity>
 //    suspend fun getCharacterById(id: Int): CharacterEntity?
 }

@@ -42,10 +42,7 @@ fun CharacterDetailSection(
     val character = characterInfo.data!!
     val scrollState = rememberScrollState()
     val characterTwo = viewModel.characterDetail.value
-    /*Timber.tag("character").w(characterInfo.data.isFavorite.toString())
-    if (characterTwo != null) {
-        Timber.tag("characterTwo").w(characterTwo.isFavorite.toString())
-    }*/
+//    Timber.tag("character").w(characterInfo.data.isFavorite.toString())
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier

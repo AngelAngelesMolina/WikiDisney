@@ -65,15 +65,15 @@ class CharacterRepositoryImpl @Inject constructor(
         return try {
             // Intentamos obtener el personaje desde la base de datos local
             val localCharacter = characterDao.getCharacterById(characterId)
-
+            Resource.Success(localCharacter)
             if (localCharacter != null) {
                 // Si el personaje existe en la base de datos local, devolvemos el dato local
                 // y hacemos una actualización en la base de datos con los nuevos datos de la API
-                val response = api.getCharacterInfo(characterId)
-                val updatedCharacterEntity = response.data.toCharacterEntity()
+                //val response = api.getCharacterInfo(characterId)
+                //val updatedCharacterEntity = response.data.toCharacterEntity()
 
                 // Actualizamos la base de datos si hay nuevos datos
-                characterDao.updateCharacter(updatedCharacterEntity)
+                //characterDao.updateCharacter(updatedCharacterEntity)
 
                 // Retornamos el personaje local inmediatamente
                 Resource.Success(localCharacter)
@@ -101,8 +101,9 @@ class CharacterRepositoryImpl @Inject constructor(
         characterDao.updateCharacter(character)
     }
 
-   /* override suspend fun getCharacterById(id: Int): CharacterEntity? {
-        return characterDao.getCharacterById(id)
-    }*/
+    override suspend fun getFavoriteCharacters(): List<CharacterEntity> {
+        return characterDao.getFavoriteCharacters()
+    }
+
 
 }

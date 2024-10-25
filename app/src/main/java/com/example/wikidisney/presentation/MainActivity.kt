@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.wikidisney.presentation.character_detail.CharacterDetailScreen
 import com.example.wikidisney.presentation.character_list.CharacterListScreen
+import com.example.wikidisney.presentation.fav_character.FavoriteCharactersScreen
 import com.example.wikidisney.presentation.theme.WikiDisneyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -72,6 +73,9 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
+                    }
+                    composable(Screen.FavoriteCharactersScreen.route) {
+                        FavoriteCharactersScreen(navController = navController)
                     }
                 }
             }

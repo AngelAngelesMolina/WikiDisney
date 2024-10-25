@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +32,6 @@ fun CharacterListScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column {
-//            Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = R.drawable.disney_logo),
                 contentDescription = "Character",
@@ -46,8 +47,17 @@ fun CharacterListScreen(
             ) { query ->
                 viewModel.searchCharacterList(query)
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = {
+                    navController.navigate("favorites_screen")
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(text = "Ver Favoritos")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
             CharacterList(navController = navController)
         }
     }

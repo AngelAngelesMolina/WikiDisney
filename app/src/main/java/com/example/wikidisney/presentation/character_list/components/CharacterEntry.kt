@@ -42,6 +42,7 @@ fun CharacterEntry(
     entry: CharacterListEntry = CharacterListEntry("", "", -1),
     navController: NavController,
     modifier: Modifier = Modifier,
+    isClickable: Boolean = true,
     viewModel: CharacterListViewModel = hiltViewModel()
 
 ) {
@@ -64,11 +65,22 @@ fun CharacterEntry(
                     )
                 )
             )
-            .clickable {
+            .then(
+                if (isClickable) {
+                    Modifier.clickable {
+                        navController.navigate(
+                            Screen.CharacterDetailScreen.route + "/${dominantColor.toArgb()}/${entry.id}"
+                        )
+                    }
+                } else {
+                    Modifier // No hacer nada si no es clickable
+                }
+            )
+           /* .clickable {
                 navController.navigate(
                     Screen.CharacterDetailScreen.route+"/${dominantColor.toArgb()}/${entry.id}"
                 )
-            }
+            }*/
     ) {
         Column {
             SubcomposeAsyncImage(

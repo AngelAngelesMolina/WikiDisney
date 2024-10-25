@@ -15,21 +15,24 @@ import com.example.wikidisney.domain.model.CharacterListEntry
 fun CharacterRow(
     rowIndex: Int,
     entries: List<CharacterListEntry>,
-    navController: NavController
+    navController: NavController,
+    isClickable: Boolean = true
 ) {
     Column {
         Row {
             CharacterEntry(
                 entry = entries[rowIndex * 2],
                 navController = navController,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isClickable
             )
             Spacer(modifier = Modifier.width(16.dp))
             if (entries.size >= rowIndex * 2 + 2) { //we have 2 more entries
                 CharacterEntry(
                     entry = entries[rowIndex * 2 + 1],
                     navController = navController,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    isClickable
                 )
             } else {
                 Spacer(modifier = Modifier.weight(1f))
